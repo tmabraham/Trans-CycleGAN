@@ -1,2 +1,2 @@
 # Trans-CycleGAN
-A convolution-fre, transformer-only version of the CycleGAN framework
+A convolution-free, transformer-only version of the CycleGAN framework
