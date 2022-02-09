@@ -110,8 +110,9 @@ class GeneratorBaseline(nn.Module):
 
         self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout)
         self.to_img = nn.Sequential(
-            Interpolate(patch_dim, mode='linear'),
-            Rearrange('b (h w) (p1 p2 c) -> b c (h p1) (w p2)', w=int(image_height/patch_height), h=int(image_width/patch_width), p1 = patch_height, p2 = patch_width)
+            nn.Linear(dim, patch_dim),
+            Rearrange('b (h w) (p1 p2 c) -> b c (h p1) (w p2)', w=int(image_height/patch_height), h=int(image_width/patch_width), p1 = patch_height, p2 = patch_width),
+            SigmoidRange(-1,1)
         )
 
     def forward(self, img):
@@ -124,7 +125,7 @@ class GeneratorBaseline(nn.Module):
 
 
 class DiscriminatorBaseline(nn.Module):
-    def __init__(self, *, image_size, patch_size, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
+    def __init__(self, *, image_size, patch_size, dim, depth, heads, mlp_dim, pool = 'mean', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
         super().__init__()
         image_height, image_width = pair(image_size)
         patch_height, patch_width = pair(patch_size)
