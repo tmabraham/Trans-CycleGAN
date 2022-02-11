@@ -6,6 +6,8 @@ from upit.data.unpaired import *
 from upit.train.cyclegan import *
 from fastai.vision.all import *
 
+import argparse
+
 # helpers
 
 def pair(t):
@@ -194,6 +196,13 @@ class TransCycleGAN(nn.Module):
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--gpu_id', type=int, default=0)
+    args = parser.parse_args()
+
+
+    torch.cuda.set_device(args.gpu_id)
     horse2zebra = untar_data('http://efrosgans.eecs.berkeley.edu/cyclegan/datasets/horse2zebra.zip')
     folders = horse2zebra.ls().sorted()
     trainA_path = folders[2]
