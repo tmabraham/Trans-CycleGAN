@@ -199,6 +199,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu_id', type=int, default=0)
+    parser.add_argument('--batch_size', type=int, default=4)
     args = parser.parse_args()
 
 
@@ -209,7 +210,7 @@ if __name__ == "__main__":
     trainB_path = folders[3]
     testA_path = folders[0]
     testB_path = folders[1]
-    dls = get_dls(trainA_path, trainB_path)
+    dls = get_dls(trainA_path, trainB_path, bs=args.batch_size)
     model = TransCycleGAN()
     learn = cycle_learner(dls, model, opt_func=partial(Adam,mom=0.5,sqr_mom=0.999), show_img_interval=1)
     learn.fit_flat_lin(100,100,2e-4)
